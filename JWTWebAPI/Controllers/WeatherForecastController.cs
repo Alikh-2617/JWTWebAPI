@@ -33,5 +33,13 @@ namespace JWTWebAPI.Controllers
             .ToArray();
         }
 
+        [HttpGet("GetMe"), Authorize]
+        [ServiceFilter(typeof(CheckCookiesFilterAttribut))]
+        public ActionResult GetMe()
+        {
+
+            return Ok("hej");
+        }
+
     }
 }

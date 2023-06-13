@@ -16,12 +16,9 @@ namespace JWTWebAPI.FilterAttribut
 
         public CheckCookiesFilterAttribut(IAuthService authService)
         {
-
             _service = authService;
         }
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-        }
+
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
@@ -31,6 +28,10 @@ namespace JWTWebAPI.FilterAttribut
             {
                 context.Result = new UnauthorizedObjectResult("You can sign in again !");
             }
+        }
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
         }
     }
 }

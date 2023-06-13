@@ -63,19 +63,14 @@ namespace JWTWebAPI.Controllers
 
 
         [HttpPost("ref-Cookie")]
-        public async Task<ActionResult<string>> RefCookie()
+        public async Task<ActionResult<string>> RefCookie(string token)
         {
+            // for ref-cookie Front can send the request befor Cookes Expirer Time 
+            // for refresh the cookie you can check the token if is valid or some thing else
             var cookie = _service.GetCookies();
             var opt = _service.SetCookies(cookie);
             Response.Cookies.Append("Ref-Cookie", cookie.CookieToken, opt);
             return Ok(cookie);
-        }
-
-        [HttpGet("GetMe"), Authorize]
-        public ActionResult GetMe()
-        {
-
-            return Ok("hej");
         }
 
 
