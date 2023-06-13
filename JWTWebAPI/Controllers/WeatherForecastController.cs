@@ -1,3 +1,4 @@
+using JWTWebAPI.FilterAttribut;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,8 @@ namespace JWTWebAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetWeatherForecast") , Authorize]
+        [HttpGet(Name = "GetWeatherForecast") ]
+        [ServiceFilter(typeof(CheckCookiesFilterAttribut))]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -30,5 +32,6 @@ namespace JWTWebAPI.Controllers
             })
             .ToArray();
         }
+
     }
 }

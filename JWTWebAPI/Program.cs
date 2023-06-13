@@ -1,3 +1,4 @@
+using JWTWebAPI.FilterAttribut;
 using JWTWebAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,33 +11,38 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
 builder.Services.AddEndpointsApiExplorer();
 
- // put option to the sweggare for token 
+builder.Services.AddScoped(typeof(CheckCookiesFilterAttribut));
+// put option to the sweggare for token   // pakage : swashbuckle.aspnetcore.filters
 builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Oauth", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
     {
-        Description = "Bearer schema (\"bearer {token}\")",
+        Description = "Bearer scheme (\"bearer {token}\")",
         In = ParameterLocation.Header,
-        Name = "Authentication",
+        Name = "Authorization",
         Type = SecuritySchemeType.ApiKey
     });
-    options.OperationFilter<SecurityRequirementsOperationFilter>();  // pakage : swashbuckle.aspnetcore.filters
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{
-    // for ValidateIssuer = false, ValidateAudience = false, we can use them later !! with SSL host url
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
     {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSetting:TokenKey").Value)),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-    };
-});
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 builder.Services.AddScoped <IAuthService,AuthService>(); 
 
