@@ -36,14 +36,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidIssuer = builder.Configuration.GetSection("AppSettings:Issuer").Value,
+            ValidAudience = builder.Configuration.GetSection("AppSettings:Audience").Value,
+
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:TokenKey").Value))
+
         };
     });
 
-builder.Services.AddScoped <IAuthService,AuthService>(); 
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 var app = builder.Build();

@@ -65,8 +65,11 @@ namespace JWTWebAPI.Services
             // Cleam is users propertis like rol osv.
             List<Claim> claim = new List<Claim>
             {
-                new Claim(ClaimTypes.Name , user.UserName),
+                new Claim(ClaimTypes.NameIdentifier , user.UserName),
                 new Claim(ClaimTypes.Role , "user")  // user Rolle can put from User Tabel or Cleam Tabel 
+
+                //new Claim(ClaimTypes.Email , user.Email),
+                //new Claim(ClaimTypes.Surname , user.UserName)
 
             };
             // pakeg = Microsoft.Identity.Token
@@ -77,6 +80,9 @@ namespace JWTWebAPI.Services
 
             var token = new JwtSecurityToken   // put token detaljer and install pakage for it
                 (
+                    // if we used Issuer & Audience
+                    _config.GetSection("AppSettings:Issuer").Value,
+                    _config.GetSection("AppSettings:Audience").Value,
                     claims: claim,
                     expires: DateTime.Now.AddDays(1),
                     signingCredentials: signing_Credentials
